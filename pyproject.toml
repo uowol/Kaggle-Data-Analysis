@@ -5,6 +5,21 @@ description = ""
 authors = ["uowol <alllhvhla@gmail.com>"]
 readme = "README.md"
 
+
+[tool.black]
+line-length = 88
+target-version = ['py312']
+skip-string-normalization = false
+
+
+[tool.isort]
+profile = "black"
+line_length = 88
+multi_line_output = 3
+include_trailing_comma = true
+known_third_party = ["numpy", "pandas", "seaborn", "scipy", "scikit-learn"]
+
+
 [tool.poetry.dependencies]
 python = ">=3.10,<3.13"
 pandas = "^2.2.3"
@@ -25,6 +40,8 @@ ray = "^2.40.0"
 dask = "^2024.12.1"
 distributed = "^2024.12.1"
 ipykernel = "^6.29.5"
+black = "^24.10.0"
+isort = "^5.13.2"
 
 
 [build-system]
