@@ -42,6 +42,8 @@ distributed = "^2024.12.1"
 ipykernel = "^6.29.5"
 black = "^24.10.0"
 isort = "^5.13.2"
+kaggle = "^1.6.17"
+pydantic = "^2.10.6"
 
 
 [build-system]
