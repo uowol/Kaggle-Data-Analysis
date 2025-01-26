@@ -30,3 +30,10 @@ RUN curl -sSL https://install.python-poetry.org | python3 -
 RUN mkdir -p /home/dev/kaggle-data-analysis
 WORKDIR /home/dev/kaggle-data-analysis
 COPY . /home/dev/kaggle-data-analysis
+
+# Install custom dependencies
+RUN apt-get update \
+    && apt-get -y --no-install-recommends install \
+    tmux \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*

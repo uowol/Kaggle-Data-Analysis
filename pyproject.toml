@@ -24,7 +24,7 @@ known_third_party = ["numpy", "pandas", "seaborn", "scipy", "scikit-learn"]
 python = ">=3.10,<3.13"
 pandas = "^2.2.3"
 seaborn = "^0.13.2"
-numpy = "^2.2.1"
+numpy = "2.1.0"
 scipy = "^1.14.1"
 matplotlib = "^3.10.0"
 plotly = "^5.24.1"
@@ -44,6 +44,8 @@ black = "^24.10.0"
 isort = "^5.13.2"
 kaggle = "^1.6.17"
 pydantic = "^2.10.6"
+ydata-profiling = "^4.12.2"
+setuptools = "^75.8.0"
 
 
 [build-system]

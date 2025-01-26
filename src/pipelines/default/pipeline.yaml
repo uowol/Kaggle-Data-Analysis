@@ -1,9 +1,9 @@
 download_data:
   url: mursideyarkin/mobile-games-ab-testing-cookie-cats
   local_path: data/cookie_cats/raw
-# extract_data:
-#   local_path: data/cookie_cats/raw
-#   output_path: data/cookie_cats/info
+extract_data:
+  local_path: data/cookie_cats/raw
+  output_path: data/cookie_cats/info
 # preprocess_data:
 #   input_path: data/cookie_cats/info
 #   output_path: data/cookie_cats/processed
