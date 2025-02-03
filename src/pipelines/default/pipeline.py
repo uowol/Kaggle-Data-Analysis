@@ -8,7 +8,7 @@ from src.formats import (
 )
 from src.components.download_data.component import Component as DownloadDataComponent
 from src.components.extract_data_info.component import Component as ExtractDataComponent
-# from src.components.preprocess_data.component import Component as PreprocessDataComponent
+from src.components.preprocess_data.component import Component as PreprocessDataComponent
 
 class PipelineType(base.PipelineType):
     download_data: Optional[RequestDownloadData] = None
@@ -39,10 +39,14 @@ class Pipeline(base.Pipeline):
             print("# [INFO] response_message: ", response_message)
             upstream_events.append(response_message)
             print("# [INFO] =============== extract_data end ===============")
-        # if self.config.preprocess_data is not None:
-        #     component = preprocess_data.Component()
-        #     request_message = self.config.preprocess_data
-        #     response_message = component(request_message, upstream_events=upstream_events)
-        #     upstream_events.append(response_message)
+        if self.config.preprocess_data is not None:
+            print("\n# [INFO] =============== preprocess_data start ===============")
+            component = PreprocessDataComponent()
+            request_message = self.config.preprocess_data
+            print("# [INFO] request_message: ", request_message)
+            response_message = component(request_message, upstream_events=upstream_events)
+            print("# [INFO] response_message: ", response_message)
+            upstream_events.append(response_message)
+            print("# [INFO] =============== preprocess_data end ===============")
 
         return
