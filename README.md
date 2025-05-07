@@ -1,4 +1,4 @@
-# Kaggle-Data-Analysis
+# Data-Analysis
 
 ### TODO
 - [ ] [A/B Testing: Step by Step & Hypothesis Testing](https://www.kaggle.com/code/ekrembayar/a-b-testing-step-by-step-hypothesis-testing)
