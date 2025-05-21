@@ -14,6 +14,8 @@ from src.formats import (
 
 
 def download_data(message: RequestDownloadData) -> ResponseDownloadData:
+    os.makedirs(message.local_path, exist_ok=True)
+
     subprocess.run(["kaggle", "datasets", "download", message.url, "-p", message.local_path])
     local_zip_files = glob.glob(f"{message.local_path}/*.zip")
     for file_path in local_zip_files:
@@ -28,8 +30,12 @@ def download_data(message: RequestDownloadData) -> ResponseDownloadData:
     
     
 def extract_data_info(message: RequestExtractInfo) -> ResponseExtractInfo:
+    os.makedirs(message.output_path, exist_ok=True)
+
     local_csv_files = glob.glob(f"{message.local_path}/*.csv")
     for file_path in local_csv_files:
+        if 'test' in file_path or 'submission' in file_path:
+            continue
         df = pd.read_csv(file_path)
         profile = ydata_profiling.ProfileReport(df)
         profile.to_file(os.path.join(message.output_path, f"{os.path.basename(file_path).replace(".csv", '')}_profile.html"))
@@ -44,6 +50,8 @@ def extract_data_info(message: RequestExtractInfo) -> ResponseExtractInfo:
     
     
 def preprocess_data(message: RequestPreprocessData) -> ResponsePreprocessData:
+    os.makedirs(message.output_path, exist_ok=True)
+    
     local_csv_files = glob.glob(f"{message.local_path}/*.csv")
     log_output_path = os.path.join(message.output_path, "log.txt")
     for file_path in local_csv_files:

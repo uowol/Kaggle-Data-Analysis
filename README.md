@@ -1,5 +1,10 @@
 # Data-Analysis
 
+### Inference
+```sh
+poetry run python -m run --pipeline_path=src/pipelines/default/pipeline.py --config_path=src/pipelines/default/pipeline.yaml
+```
+
 ### TODO
 - [ ] [A/B Testing: Step by Step & Hypothesis Testing](https://www.kaggle.com/code/ekrembayar/a-b-testing-step-by-step-hypothesis-testing)
     - A/B 테스트가 무엇인지 이해하고 가설 검정에 대한 예제를 따라가며 감을 익힙니다.

@@ -27,9 +27,9 @@ ENV PATH="/root/.local/bin:$PATH"
 RUN curl -sSL https://install.python-poetry.org | python3 -
 
 # Set working directory and permissions
-RUN mkdir -p /home/dev/kaggle-data-analysis
-WORKDIR /home/dev/kaggle-data-analysis
-COPY . /home/dev/kaggle-data-analysis
+RUN mkdir -p /home/dev/data-analysis
+WORKDIR /home/dev/data-analysis
+COPY . /home/dev/data-analysis
 
 # Install custom dependencies
 RUN apt-get update \

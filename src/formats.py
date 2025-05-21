@@ -6,21 +6,22 @@ class RequestMessage(BaseModel):
     pass
 
 class ResponseMessage(BaseModel):
-    pass
+    status: str
 
 class RequestDownloadData(RequestMessage):
     url: str
     local_path: str
+    is_competition: bool = False
 
-class ResponseDownloadData(RequestDownloadData):
-    status: str
+class ResponseDownloadData(ResponseMessage, RequestDownloadData):
+    pass 
     
 class RequestExtractInfo(RequestMessage):
     local_path: str
     output_path: str
     
-class ResponseExtractInfo(RequestExtractInfo):
-    status: str
+class ResponseExtractInfo(ResponseMessage, RequestExtractInfo):
+    pass
     
 class RequestPreprocessData(RequestMessage):
     local_path: str
@@ -29,5 +30,5 @@ class RequestPreprocessData(RequestMessage):
     outlier: Optional[List[Dict[str, Union[str, int, list]]]] = None
     missing: Optional[List[Dict[str, Union[str, int, list]]]] = None
 
-class ResponsePreprocessData(RequestPreprocessData):
-    status: str
+class ResponsePreprocessData(ResponseMessage, RequestPreprocessData):
+    pass

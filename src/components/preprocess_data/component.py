@@ -1,3 +1,6 @@
+import os
+import yaml
+from pathlib import Path
 from typing import List
 
 from src.components import base
@@ -9,7 +12,12 @@ class ComponentType(base.ComponentType):
 
 class Component(base.Component):
     def init(self, **config):
-        self.config = ComponentType(**config)
+        if config:
+            self.config = ComponentType(**config)
+        else:
+            with open(os.path.join(Path(__file__).parent, "component.yaml"), "r") as fp:
+                self.config = yaml.safe_load(fp)
+                self.config = self.config if self.config is not None else {}
 
     def call(self, message: RequestPreprocessData,
              *, upstream_events: List[ResponseMessage] = []) -> ResponsePreprocessData:

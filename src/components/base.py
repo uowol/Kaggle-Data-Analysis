@@ -20,5 +20,5 @@ class Component(ABC):
         pass
     
     @abstractmethod
-    def call(self, request: RequestMessage, *args, **kwargs) -> ResponseMessage:
+    def call(self, message: RequestMessage, *args, **kwargs) -> ResponseMessage:
         pass
