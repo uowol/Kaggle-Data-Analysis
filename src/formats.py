@@ -32,3 +32,10 @@ class RequestPreprocessData(RequestMessage):
 
 class ResponsePreprocessData(ResponseMessage, RequestPreprocessData):
     pass
+    
+class RequestTestOutput(RequestMessage):
+    output_filepath: str
+    reference_filepath: str
+
+class ResponseTestOutput(ResponseMessage, RequestTestOutput):
+    pass

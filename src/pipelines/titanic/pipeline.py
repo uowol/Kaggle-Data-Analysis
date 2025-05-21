@@ -57,5 +57,4 @@ class Pipeline(base.Pipeline):
             upstream_events.append(response_message)
             print("# [INFO] =============== test_output end ===============\n")
 
-        print(response_message)
         return

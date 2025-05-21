@@ -1,0 +1,10 @@
+# download_data:
+#   url: titanic
+#   local_path: data/titanic/raw
+#   is_competition: true
+# extract_data:
+#   local_path: data/titanic/raw
+#   output_path: data/titanic/info
+test_output:
+  output_filepath: data/titanic/raw/gender_submission.csv
+  reference_filepath: data/titanic/raw/gender_submission.csv
