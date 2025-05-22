@@ -1,0 +1,24 @@
+logistic_regression:
+  params:
+    penalty:
+      type: str
+      default: l2
+      description: Regularization type. Options are 'l1', 'l2', 'elasticnet', and 'none'.
+    C:
+      type: float
+      default: 1.0
+      description: Inverse of regularization strength; smaller values specify stronger regularization.
+    solver:
+      type: str
+      default: lbfgs
+      description: Algorithm to use in the optimization problem. Options are 'newton-cg', 'lbfgs', 'liblinear', 'sag', and 'saga'.
+    max_iter:
+      type: int
+      default: 100
+      description: Maximum number of iterations for the solver to converge.
+    random_state:
+      type: int
+      default: null
+      description: Controls the randomness of the estimator.
+title_prediction: 
+  params: null
