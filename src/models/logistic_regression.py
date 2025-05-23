@@ -7,6 +7,9 @@ from src.formats import (
 )
 from sklearn.linear_model import LogisticRegression
 from sklearn.model_selection import cross_val_score, StratifiedKFold
+from sklearn.compose import ColumnTransformer
+from sklearn.preprocessing import StandardScaler
+from sklearn.pipeline import Pipeline
 
 
 def predict(message: RequestModeling, params: dict = {}) -> ResponseModeling:
@@ -46,31 +49,58 @@ def predict(message: RequestModeling, params: dict = {}) -> ResponseModeling:
     rare_headers = header_counts[header_counts < 5].index
     X_train['TicketHeader'] = X_train['TicketHeader'].replace(rare_headers, 'Unknown')
     known_headers = set(X_train['TicketHeader'].unique())
+
+    # Age^2
+    X_train['Age^2'] = X_train['Age'] ** 2
+    # Age^3
+    X_train['Age^3'] = X_train['Age'] ** 3
     
-    # Survived ~ Pclass + Sex + Age(categorical) + FamilySize
-    X_columns = ['Pclass', 'Sex', 'AgeGroup', 'FamilySize', 'TicketHeader']
-    
-    X_train = X_train[X_columns]
-    X_train = pd.get_dummies(X_train, columns=X_columns, drop_first=True)
-    
-    model = LogisticRegression(
-        penalty=params.get('penalty', 'l2'),
-        C=params.get('C', 1.0),
-        max_iter=params.get('max_iter', 100),
-        solver=params.get('solver', 'lbfgs'),
-        class_weight=params.get('class_weight', None),
-        random_state=params.get('random_state', 42),
-        verbose=True
+    # Survived ~ Pclass + Sex + Age(categorical) + FamilySize + TicketHeader
+    # num_cols = []
+    # cat_cols = ['Pclass', 'Sex', 'AgeGroup', 'FamilySize', 'TicketHeader']
+
+    # Survived ~ Pclass + Sex + Age(continuous) + FamilySize + TicketHeader
+    num_cols = ['Age', 'Age^2', 'Age^3']
+    cat_cols = ['Pclass', 'Sex', 'FamilySize', 'TicketHeader']
+        
+    X_train_dummies = pd.get_dummies(X_train[cat_cols], columns=cat_cols, drop_first=True)
+    dummy_cat_cols = X_train_dummies.columns.tolist()
+    X_train = pd.concat([X_train[num_cols], X_train_dummies], axis=1)
+
+    # 가중치 부여
+    pclass_cols = [col for col in X_train.columns if col.startswith('Pclass_')]
+    sex_cols = [col for col in X_train.columns if col.startswith('Sex_')]
+    age_cols = [col for col in X_train.columns if col.startswith('AgeGroup_')]
+    fam_cols = [col for col in X_train.columns if col.startswith('FamilySize_')]
+    tick_cols = [col for col in X_train.columns if col.startswith('TicketHeader_')]
+    # X_train[pclass_cols] = X_train[pclass_cols] * 0.2
+
+    preprocess = ColumnTransformer(
+        [('num', StandardScaler(), num_cols),
+        ('cat', 'passthrough', dummy_cat_cols)]
     )
+
+    model = Pipeline([
+        ('prep', preprocess),
+        ('lr', LogisticRegression(
+            penalty=params.get('penalty', 'l2'),
+            C=params.get('C', 1.0),
+            max_iter=params.get('max_iter', 100),
+            solver=params.get('solver', 'lbfgs'),
+            class_weight=params.get('class_weight', None),
+            random_state=params.get('random_state', 42),
+            verbose=True
+        ))
+    ])
     
     skf = StratifiedKFold(n_splits=5, shuffle=True, random_state=params.get('random_state', 42))
-    cv_scores = cross_val_score(model, X_train, y_train, cv=skf, scoring='accuracy')
+    cv_scores = cross_val_score(model, X_train, y_train, cv=skf, scoring='accuracy', error_score="raise",)
     print(f"Cross-validation Accuracy Scores: {cv_scores}")
     print(f"Mean Accuracy: {cv_scores.mean():.4f} ± {cv_scores.std():.4f}")
     
     model.fit(X_train, y_train)
     importance = pd.Series(
-        model.coef_[0],  # 이진 분류이므로 첫 번째 클래스의 계수
+        model['lr'].coef_[0],  # 이진 분류이므로 첫 번째 클래스의 계수
         index=X_train.columns
     ).sort_values(ascending=False)
     print(importance)
@@ -92,8 +122,11 @@ def predict(message: RequestModeling, params: dict = {}) -> ResponseModeling:
     X_test['TicketHeader'] = X_test['TicketHeader'].apply(
         lambda x: x if x in known_headers else 'Unknown'
     )
-    X_test = X_test[X_columns]
-    X_test = pd.get_dummies(X_test, columns=X_columns, drop_first=True)
+    X_test['Age^2'] = X_test['Age'] ** 2
+    X_test['Age^3'] = X_test['Age'] ** 3
+    
+    X_test_dummies = pd.get_dummies(X_test[cat_cols], columns=cat_cols, drop_first=True)
+    X_test = pd.concat([X_test[num_cols], X_test_dummies], axis=1)
     y_pred = model.predict(X_test)
     response = pd.DataFrame({
         'PassengerId': X_test_PassengerId,
