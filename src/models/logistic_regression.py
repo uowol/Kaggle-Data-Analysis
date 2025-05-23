@@ -23,14 +23,22 @@ def predict(message: RequestModeling, params: dict = {}) -> ResponseModeling:
     # Age는 연속형 변수이지만 범주별로 나타나는 경향이 다르기 때문에 범주형 변수로 변환
     # 결측값은 이름의 title을 이용하여 채우고, title이 Unseen인 경우가 있을 수 있으므로 이 경우 Pclass의 평균값으로 채운다.
     X_train['Title'] = X_train['Name'].str.split(',', expand=True)[1].str.split('.', expand=True)[0].str.strip()
-    X_train['Age'].fillna(X_train.groupby('Title').Age.transform('median'), inplace=True)
-    X_train['Age'].fillna(X_train.groupby('Pclass').Age.transform('median'), inplace=True)
+    X_train['Age'].fillna(X_train.groupby('Title').Age.transform('mean'), inplace=True)
+    X_train['Age'].fillna(X_train.groupby('Pclass').Age.transform('mean'), inplace=True)
     age_bins = [0, 10, 20, 30, 40, 50, 60, 100]
     age_labels = ['0-10', '10-20', '20-30', '30-40', '40-50', '50-60', '60+']
     X_train['AgeGroup'] = pd.cut(X_train['Age'], bins=age_bins, labels=age_labels)
     
-    # Survived ~ Pclass + Sex + Age(categorical)
-    X_columns = ['Pclass', 'Sex', 'AgeGroup']
+    # SibSp와 Parch의 경우 데이터 수가 적은 케이스를 하나로 병합
+    # X_train['SibSp'] = X_train['SibSp'].replace([x for x in range(3, 11)], 3)
+    # X_train['Parch'] = X_train['Parch'].replace([x for x in range(3, 11)], 3)
+
+    # FamilySize는 SibSp와 Parch를 합친 값으로, 가족의 크기를 나타내는 변수
+    X_train['FamilySize'] = X_train['SibSp'] + X_train['Parch']
+    X_train['FamilySize'] = X_train['FamilySize'].replace([x for x in range(4, 11)], 4)
+    
+    # Survived ~ Pclass + Sex + Age(categorical) + FamilySize
+    X_columns = ['Pclass', 'Sex', 'AgeGroup', 'FamilySize']
     
     X_train = X_train[X_columns]
     X_train = pd.get_dummies(X_train, columns=X_columns, drop_first=True)
@@ -60,9 +68,13 @@ def predict(message: RequestModeling, params: dict = {}) -> ResponseModeling:
     X_test = pd.read_csv(message.test_filepath)
     X_test_PassengerId = X_test['PassengerId']
     X_test['Title'] = X_test['Name'].str.split(',', expand=True)[1].str.split('.', expand=True)[0].str.strip()
-    X_test['Age'].fillna(X_test.groupby('Title').Age.transform('median'), inplace=True)
-    X_test['Age'].fillna(X_test.groupby('Pclass').Age.transform('median'), inplace=True)
+    X_test['Age'].fillna(X_test.groupby('Title').Age.transform('mean'), inplace=True)
+    X_test['Age'].fillna(X_test.groupby('Pclass').Age.transform('mean'), inplace=True)
     X_test['AgeGroup'] = pd.cut(X_test['Age'], bins=age_bins, labels=age_labels)
+    # X_test['SibSp'] = X_test['SibSp'].replace([x for x in range(3, 11)], 3)
+    # X_test['Parch'] = X_test['Parch'].replace([x for x in range(3, 11)], 3)
+    X_test['FamilySize'] = X_test['SibSp'] + X_test['Parch']
+    X_test['FamilySize'] = X_test['FamilySize'].replace([x for x in range(4, 11)], 4)
     X_test = X_test[X_columns]
     X_test = pd.get_dummies(X_test, columns=X_columns, drop_first=True)
     y_pred = model.predict(X_test)
