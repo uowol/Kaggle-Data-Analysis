@@ -37,8 +37,18 @@ def predict(message: RequestModeling, params: dict = {}) -> ResponseModeling:
     X_train['FamilySize'] = X_train['SibSp'] + X_train['Parch']
     X_train['FamilySize'] = X_train['FamilySize'].replace([x for x in range(4, 11)], 4)
     
+    # Ticket은 객실, 동행자, 요금, 어디서 탑승했는지에 대한 정보를 포함, 샘플이 너무 적은 경우는 Unknown으로 대체
+    X_train['TicketCleansed'] = X_train.Ticket.str.replace('.', '').str.upper()
+    X_train['TicketHeader'] = X_train['TicketCleansed'].apply(
+        lambda x: x.split(' ')[0] if len(x.split(' ')) > 1 else 'Unknown'
+    )
+    header_counts = X_train['TicketHeader'].value_counts()
+    rare_headers = header_counts[header_counts < 5].index
+    X_train['TicketHeader'] = X_train['TicketHeader'].replace(rare_headers, 'Unknown')
+    known_headers = set(X_train['TicketHeader'].unique())
+    
     # Survived ~ Pclass + Sex + Age(categorical) + FamilySize
-    X_columns = ['Pclass', 'Sex', 'AgeGroup', 'FamilySize']
+    X_columns = ['Pclass', 'Sex', 'AgeGroup', 'FamilySize', 'TicketHeader']
     
     X_train = X_train[X_columns]
     X_train = pd.get_dummies(X_train, columns=X_columns, drop_first=True)
@@ -75,6 +85,13 @@ def predict(message: RequestModeling, params: dict = {}) -> ResponseModeling:
     # X_test['Parch'] = X_test['Parch'].replace([x for x in range(3, 11)], 3)
     X_test['FamilySize'] = X_test['SibSp'] + X_test['Parch']
     X_test['FamilySize'] = X_test['FamilySize'].replace([x for x in range(4, 11)], 4)
+    X_test['TicketCleansed'] = X_test.Ticket.str.replace('.', '').str.upper()
+    X_test['TicketHeader'] = X_test['TicketCleansed'].apply(
+        lambda x: x.split(' ')[0] if len(x.split(' ')) > 1 else 'Unknown'
+    )
+    X_test['TicketHeader'] = X_test['TicketHeader'].apply(
+        lambda x: x if x in known_headers else 'Unknown'
+    )
     X_test = X_test[X_columns]
     X_test = pd.get_dummies(X_test, columns=X_columns, drop_first=True)
     y_pred = model.predict(X_test)
