@@ -4,6 +4,6 @@ logistic_regression:
     C: 1.0
     solver: lbfgs
     max_iter: 100
-    random_state: null
+    random_state: 42
 title_prediction: 
   params: null
