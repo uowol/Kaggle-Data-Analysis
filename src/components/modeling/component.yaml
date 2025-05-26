@@ -5,5 +5,12 @@ logistic_regression:
     solver: lbfgs
     max_iter: 100
     random_state: 42
+decision_tree:
+  params:
+    criterion: entropy
+    max_depth: null
+    min_samples_split: 10
+    min_samples_leaf: 5
+    random_state: 42
 title_prediction: 
   params: null
