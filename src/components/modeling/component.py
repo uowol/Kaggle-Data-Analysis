@@ -49,7 +49,7 @@ if __name__ == "__main__":
         train_filepath="data/titanic/raw/train.csv",
         test_filepath="data/titanic/raw/test.csv",
         output_filepath="data/titanic/raw/output.csv",
-        model_type="decision_tree",
+        model_type="logistic_regression",
     )
     component = Component()
     response = component(message)

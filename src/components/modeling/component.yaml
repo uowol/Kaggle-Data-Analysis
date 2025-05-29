@@ -1,7 +1,7 @@
 logistic_regression:
   params:
     penalty: l2
-    C: 1.0
+    C: 0.1
     solver: lbfgs
     max_iter: 100
     random_state: 42
