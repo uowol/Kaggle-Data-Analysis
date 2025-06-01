@@ -13,6 +13,7 @@ from src.models import (
     title_prediction,
     logistic_regression,
     decision_tree,
+    randomforest
 )
 from src.formats import RequestModeling, ResponseModeling, ResponseMessage
 
@@ -39,6 +40,8 @@ class Component(base.Component):
             return logistic_regression.predict(message, self.config[message.model_type]['params'])
         if message.model_type == 'decision_tree':
             return decision_tree.predict(message, self.config[message.model_type]['params'])
+        if message.model_type == 'randomforest':
+            return randomforest.predict(message, self.config[message.model_type]['params'])
         
         return base_model.predict(message)
 
