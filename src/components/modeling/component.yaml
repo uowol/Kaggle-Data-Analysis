@@ -22,3 +22,14 @@ randomforest:
     min_samples_split: 2
     min_samples_leaf: 1
     random_state: 42
+xgboost:
+  params:
+    n_estimators: 2000    # learning rate가 0.03~0.1 사이라면 200~400
+    learning_rate: 0.02   # 표본이 작으므로 느린 학습이 안정적
+    max_depth: 3          # 깊이가 너무 깊으면 과적합 위험
+    min_child_weight: 2   # 샘플 수가 적은 잎 분할 억제
+    gamma: 0.6            # 분할 최소 loss-gain
+    subsample: 0.8        # 전체 샘플의 80%만 사용
+    colsample_bytree: 0.8 # 각 트리마다 80%의 피처만 사용
+    scale_pos_weight: 1   # 불균형 클래스에 대한 가중치 조정, 불균형이 약해 가중치 조정 X
+    random_state: 42
