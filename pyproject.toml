@@ -17,37 +17,26 @@ profile = "black"
 line_length = 88
 multi_line_output = 3
 include_trailing_comma = true
-known_third_party = ["numpy", "pandas", "seaborn", "scipy", "scikit-learn"]
+known_third_party = ["numpy", "pandas", "seaborn", "scikit-learn"]
 
 
 [tool.poetry.dependencies]
 python = ">=3.10,<3.13"
 pandas = "^2.2.3"
-seaborn = "^0.13.2"
 numpy = "2.1.0"
-scipy = "^1.14.1"
 matplotlib = "^3.10.0"
-plotly = "^5.24.1"
-scikit-learn = "^1.6.0"
-beautifulsoup4 = "^4.12.3"
+seaborn = "^0.13.2"
 requests = "^2.32.3"
-statsmodels = "^0.14.4"
-prophet = "^1.1.6"
-streamlit = "^1.41.1"
-apache-airflow = "^2.10.4"
-hypothesis = "^6.123.2"
-ray = "^2.40.0"
-dask = "^2024.12.1"
-distributed = "^2024.12.1"
 ipykernel = "^6.29.5"
 black = "^24.10.0"
 isort = "^5.13.2"
 kaggle = "^1.6.17"
-pydantic = "^2.10.6"
-ydata-profiling = "^4.12.2"
 setuptools = "^75.8.0"
 pyaml = "^25.1.0"
-xgboost = "^3.0.2"
+pydantic = "^2.10.6"
+ydata-profiling = "^4.12.2"
+statsmodels = "^0.14.4"
+scikit-learn = "^1.6.0"
 
 
 [build-system]

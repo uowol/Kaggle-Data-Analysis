@@ -1,0 +1,7 @@
+download_data:
+  url: zahrazolghadr/ab-test-cookie-cats
+  local_path: data/cookie-cats/raw
+  is_competition: false
+extract_data:
+  local_path: data/cookie-cats/raw
+  output_path: data/cookie-cats/info
