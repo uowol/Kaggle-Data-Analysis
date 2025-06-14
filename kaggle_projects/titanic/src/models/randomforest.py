@@ -1,25 +1,30 @@
-import sys
-from pathlib import Path
-sys.path.append(str(Path(__file__).resolve().parent.parent.parent))
-
 import os
 import time
 import pandas as pd
 from pathlib import Path
-from src.formats import (
-    RequestModeling, ResponseModeling
-)
 from sklearn.ensemble import RandomForestClassifier
 
+import sys
+sys.path.append("kaggle_projects/")
 
-def predict(message: RequestModeling, params: dict = None) -> ResponseModeling:
-    os.makedirs(Path(message.output_filepath).parent, exist_ok=True)
-    assert os.path.exists(message.train_filepath), f"Train file {message.train_filepath} does not exist"
-    assert os.path.exists(message.test_filepath), f"Test file {message.test_filepath} does not exist"
+from titanic.src.formats import (
+    RequestModeling, ResponseModeling
+)
+
+
+def predict(message: RequestModeling, params: dict = {}) -> ResponseModeling:
+    base_dir = Path(__file__).resolve().parent.parent.parent.parent
+    output_filepath = base_dir / message.output_filepath
+    train_filepath = base_dir / message.train_filepath
+    test_filepath = base_dir / message.test_filepath
+
+    os.makedirs(output_filepath.parent, exist_ok=True)
+    assert os.path.exists(train_filepath), f"Train file {train_filepath} does not exist"
+    assert os.path.exists(test_filepath), f"Test file {test_filepath} does not exist"
     
-    train = pd.read_csv(message.train_filepath)
+    train = pd.read_csv(train_filepath)
     train['Sex'] = train['Sex'].apply(lambda x: 1 if x == 'male' else 0)
-    test = pd.read_csv(message.test_filepath)
+    test = pd.read_csv(test_filepath)
     test['Sex'] = test['Sex'].apply(lambda x: 1 if x == 'male' else 0)
     
     features = ["Pclass", "Sex", "SibSp", "Parch"]
@@ -36,10 +41,8 @@ def predict(message: RequestModeling, params: dict = None) -> ResponseModeling:
     predictions = model.predict(X_test)
     
     output = pd.DataFrame({'PassengerId': test.PassengerId, 'Survived': predictions})
-    output.to_csv('submission.csv', index=False)
+    output.to_csv(output_filepath, index=False)
     print("Your submission was successfully saved!")
-    
-    
     
     
     return ResponseModeling(

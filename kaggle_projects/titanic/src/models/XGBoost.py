@@ -1,27 +1,32 @@
-import sys
-from pathlib import Path
-sys.path.append(str(Path(__file__).resolve().parent.parent.parent))
-
 import os
 import re
 import time
 import pandas as pd
 import numpy as np
 from pathlib import Path
-from kaggle_projects.base.formats import (
-    RequestModeling, ResponseModeling
-)
 import xgboost as xgb
 
+import sys
+sys.path.append("kaggle_projects/")
 
-def predict(message: RequestModeling, params: dict = None) -> ResponseModeling:
-    os.makedirs(Path(message.output_filepath).parent, exist_ok=True)
-    assert os.path.exists(message.train_filepath), f"Train file {message.train_filepath} does not exist"
-    assert os.path.exists(message.test_filepath), f"Test file {message.test_filepath} does not exist"
+from titanic.src.formats import (
+    RequestModeling, ResponseModeling
+)
+
+
+def predict(message: RequestModeling, params: dict = {}) -> ResponseModeling:
+    base_dir = Path(__file__).resolve().parent.parent.parent.parent
+    output_filepath = base_dir / message.output_filepath
+    train_filepath = base_dir / message.train_filepath
+    test_filepath = base_dir / message.test_filepath
+
+    os.makedirs(output_filepath.parent, exist_ok=True)
+    assert os.path.exists(train_filepath), f"Train file {train_filepath} does not exist"
+    assert os.path.exists(test_filepath), f"Test file {test_filepath} does not exist"
     
-    train = pd.read_csv(message.train_filepath)
-    test = pd.read_csv(message.test_filepath)
-    
+    train = pd.read_csv(train_filepath)
+    test = pd.read_csv(test_filepath)
+
     PassengerId = test['PassengerId']
     
     np.random.seed(params.get('random_state', 42))
@@ -38,7 +43,7 @@ def predict(message: RequestModeling, params: dict = None) -> ResponseModeling:
     )
     header_counts = ticket_header.value_counts()
     rare_headers = header_counts[header_counts < 5].index
-    ticket_header = ticket_header.replace(rare_headers, 'Unknown')
+    ticket_header = ticket_header.replace(list(rare_headers), 'Unknown')
     known_headers = set(ticket_header.unique())
     train['TicketHeader'] = ticket_header
     test_ticket_cleansed = test.Ticket.str.replace('.', '').str.upper()
@@ -92,7 +97,7 @@ def predict(message: RequestModeling, params: dict = None) -> ResponseModeling:
         age_avg = data['Age'].mean()
         age_std = data['Age'].std()
         age_null_count = data['Age'].isnull().sum()
-        age_null_random_list = np.random.randint(age_avg - age_std, age_avg + age_std, size=age_null_count)
+        age_null_random_list = np.random.randint(int(age_avg - age_std), int(age_avg + age_std), size=age_null_count)
         data.loc[np.isnan(data['Age']), 'Age'] = age_null_random_list
         data['Age'] = data['Age'].astype(int)
         
@@ -165,7 +170,7 @@ def predict(message: RequestModeling, params: dict = None) -> ResponseModeling:
         'Survived': y_pred
     })
 
-    response.to_csv(os.path.join(message.output_filepath), index=False)
+    response.to_csv(output_filepath, index=False)
         
     return ResponseModeling(
         status="success",

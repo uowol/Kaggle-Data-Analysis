@@ -1,5 +1,4 @@
 from pydantic import BaseModel
-from typing import List, Dict, Union, Optional
 
 
 class RequestMessage(BaseModel):

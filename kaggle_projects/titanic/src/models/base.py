@@ -1,16 +1,23 @@
 import os
-import time
-import pandas as pd
 from pathlib import Path
-from kaggle_projects.base.formats import (
+
+import sys
+sys.path.append("kaggle_projects/")
+
+from titanic.src.formats import (
     RequestModeling, ResponseModeling
 )
 
 
-def predict(message: RequestModeling, params: dict = None) -> ResponseModeling:
-    os.makedirs(Path(message.output_filepath).parent, exist_ok=True)
-    assert os.path.exists(message.train_filepath), f"Train file {message.train_filepath} does not exist"
-    assert os.path.exists(message.test_filepath), f"Test file {message.test_filepath} does not exist"
+def predict(message: RequestModeling) -> ResponseModeling:
+    base_dir = Path(__file__).resolve().parent.parent.parent.parent
+    output_filepath = base_dir / message.output_filepath
+    train_filepath = base_dir / message.train_filepath
+    test_filepath = base_dir / message.test_filepath
+    
+    os.makedirs(output_filepath.parent, exist_ok=True)
+    assert os.path.exists(train_filepath), f"Train file {train_filepath} does not exist"
+    assert os.path.exists(test_filepath), f"Test file {test_filepath} does not exist"
     
     # TBD
     

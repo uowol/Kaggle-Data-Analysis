@@ -9,7 +9,7 @@ modeling:
   train_filepath: data/titanic/raw/train.csv
   test_filepath: data/titanic/raw/test.csv
   output_filepath: data/titanic/raw/submission.csv
-  model_type: xgboost
+  model_type: randomforest
 test_output:
   output_filepath: data/titanic/raw/submission.csv
   reference_filepath: data/titanic/raw/gender_submission.csv

@@ -26,7 +26,7 @@ def main():
         config = config if config is not None else {}
 
     # -- install dependencies
-    requirements_path = f"{args.project_name}/requirements.txt"
+    requirements_path = f"kaggle_projects/{args.project_name}/requirements.txt"
     if os.path.exists(requirements_path):
         subprocess.check_call([sys.executable, '-m', 'pip', 'install', '-r', requirements_path])
 
