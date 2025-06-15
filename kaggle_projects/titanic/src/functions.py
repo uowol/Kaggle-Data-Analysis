@@ -9,7 +9,7 @@ from titanic.src.formats import RequestTestOutput, ResponseTestOutput
 
 
 def test_output(message: RequestTestOutput) -> ResponseTestOutput:
-    base_dir = Path(__file__).resolve().parent.parent.parent
+    base_dir = Path('./')
     output_filepath = base_dir / message.output_filepath
     reference_filepath = base_dir / message.reference_filepath
 

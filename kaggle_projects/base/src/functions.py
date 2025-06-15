@@ -17,7 +17,7 @@ from src.formats import (
 
 
 def get_logger() -> logging.Logger:
-    base_dir = Path(__file__).resolve().parent.parent.parent
+    base_dir = Path('./')
     log_dir = base_dir / 'outputs/logs'
 
     formatter = logging.Formatter("%(asctime)s | %(levelname)s | %(message)s", datefmt="%Y-%m-%d %H:%M:%S")
@@ -39,7 +39,7 @@ def get_logger() -> logging.Logger:
 
 
 def download_data(message: RequestDownloadData) -> ResponseDownloadData:
-    base_dir = Path(__file__).resolve().parent.parent.parent
+    base_dir = Path('./')
     local_path = base_dir / message.local_path
 
     os.makedirs(local_path, exist_ok=True)
@@ -60,7 +60,7 @@ def download_data(message: RequestDownloadData) -> ResponseDownloadData:
     
     
 def extract_data_info(message: RequestExtractInfo) -> ResponseExtractInfo:
-    base_dir = Path(__file__).resolve().parent.parent.parent
+    base_dir = Path('./')
     local_path = base_dir / message.local_path
     output_path = base_dir / message.output_path
 

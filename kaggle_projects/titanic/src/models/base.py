@@ -10,7 +10,7 @@ from titanic.src.formats import (
 
 
 def predict(message: RequestModeling) -> ResponseModeling:
-    base_dir = Path(__file__).resolve().parent.parent.parent.parent
+    base_dir = Path('./')
     output_filepath = base_dir / message.output_filepath
     train_filepath = base_dir / message.train_filepath
     test_filepath = base_dir / message.test_filepath
