@@ -2,9 +2,9 @@ from abc import ABC, abstractmethod
 from pydantic import BaseModel
 
 import sys
-sys.path.append("kaggle_projects/base/")
+sys.path.append("kaggle_projects/")
 
-from src.formats import RequestMessage, ResponseMessage
+from base.src.formats import RequestMessage, ResponseMessage
 
 
 class ComponentType(BaseModel):

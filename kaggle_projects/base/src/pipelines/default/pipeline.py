@@ -4,18 +4,18 @@ from pathlib import Path
 from typing import Optional
 
 import sys
-sys.path.append("kaggle_projects/base/")
+sys.path.append("kaggle_projects/")
 
-from src.pipelines import base
-from src.components import (
+from base.src.pipelines import base
+from base.src.components import (
     DownloadDataComponent,
     ExtractDataComponent,
 )
-from src.formats import (
+from base.src.formats import (
     RequestDownloadData, ResponseDownloadData,
     RequestExtractInfo, ResponseExtractInfo,
 )
-from src.functions import get_logger
+from base.src.functions import get_logger
 
 
 logger = get_logger()

@@ -37,6 +37,7 @@ pydantic = "^2.10.6"
 ydata-profiling = "^4.12.2"
 statsmodels = "^0.14.4"
 scikit-learn = "^1.6.0"
+pytest = "^8.4.0"
 
 
 [build-system]

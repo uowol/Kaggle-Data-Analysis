@@ -5,11 +5,11 @@ from pathlib import Path
 from typing import List
 
 import sys
-sys.path.append("kaggle_projects/base/")
+sys.path.append("kaggle_projects/")
 
-from src.components import base
-from src.functions import download_data
-from src.formats import RequestDownloadData, ResponseDownloadData, ResponseMessage
+from base.src.components import base
+from base.src.functions import download_data
+from base.src.formats import RequestDownloadData, ResponseDownloadData, ResponseMessage
 
 class ComponentType(base.ComponentType):
     pass    
