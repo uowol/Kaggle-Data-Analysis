@@ -32,4 +32,12 @@ jobs:
 
       - name: Run tests in base project
         working-directory: kaggle_projects/base
-        run: poetry run pytest tests
+        run: |
+          pip install -r requirements.txt
+          poetry run pytest tests
+
+      - name: Run tests in titanic project
+        working-directory: kaggle_projects/titanic
+        run: |
+          pip install -r requirements.txt
+          poetry run pytest tests
