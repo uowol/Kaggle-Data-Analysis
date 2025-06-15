@@ -8,9 +8,9 @@ import ydata_profiling
 from pathlib import Path
 
 import sys
-sys.path.append("kaggle_projects/base/")
+sys.path.append("kaggle_projects/")
 
-from src.formats import (
+from base.src.formats import (
     RequestDownloadData, ResponseDownloadData,
     RequestExtractInfo, ResponseExtractInfo,
 )
