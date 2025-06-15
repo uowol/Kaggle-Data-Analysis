@@ -30,6 +30,12 @@ jobs:
       - name: Set PYTHONPATH
         run: echo "PYTHONPATH=$GITHUB_WORKSPACE/kaggle_projects" >> $GITHUB_ENV
 
+      - name: Decode and write kaggle.json
+        run: |
+          mkdir -p ~/.kaggle
+          echo "${{ secrets.KAGGLE_JSON_B64 }}" | base64 --decode > ~/.kaggle/kaggle.json
+          chmod 600 ~/.kaggle/kaggle.json
+
       - name: Run tests in base project
         working-directory: kaggle_projects/base
         run: |
