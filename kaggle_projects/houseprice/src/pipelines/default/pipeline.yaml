@@ -1,0 +1,15 @@
+download_data:
+  url: home-data-for-ml-course
+  local_path: data/houseprice/raw
+  is_competition: true
+extract_data:
+  local_path: data/houseprice/raw
+  output_path: data/houseprice/info
+# modeling:
+#   train_filepath: data/houseprice/raw/train.csv
+#   test_filepath: data/houseprice/raw/test.csv
+#   output_filepath: data/houseprice/raw/submission.csv
+#   model_type: randomforest
+# test_output:
+#   output_filepath: data/houseprice/raw/submission.csv
+#   reference_filepath: data/houseprice/raw/gender_submission.csv
